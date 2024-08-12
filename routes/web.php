@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
@@ -32,9 +33,8 @@ Route::post('/admin/login', [SessionController::class, 'login']);
 Route::post('/admin/logout', [SessionController::class, 'logout'])->middleware('auth');
 
 
-Route::post('/admin/register', [RegisteredUserController::class, 'store'])->middleware(['auth', AdminMiddleware::class]);
 Route::post('/admin/categories', [CategoryController::class, 'store'])->middleware(['auth', AdminMiddleware::class]);
-Route::get('/admin/categories/{category}/products', [ProductController::class, 'showByCategory'])->middleware(['auth', AdminMiddleware::class]);
+Route::post('/admin/products', [ProductController::class, 'store'])->middleware(['auth', AdminMiddleware::class]);
 
 Route::get('/csrf', function (){
     return response()->json([
