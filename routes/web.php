@@ -34,7 +34,6 @@ Route::post('/admin/logout', [SessionController::class, 'logout'])->middleware('
 
 Route::post('/admin/register', [RegisteredUserController::class, 'store'])->middleware(['auth', AdminMiddleware::class]);
 Route::post('/admin/categories', [CategoryController::class, 'store'])->middleware(['auth', AdminMiddleware::class]);
-Route::get('/admin/categories', [CategoryController::class, 'index'])->middleware(['auth', AdminMiddleware::class]);
 Route::get('/admin/categories/{category}/products', [ProductController::class, 'showByCategory'])->middleware(['auth', AdminMiddleware::class]);
 
 Route::get('/csrf', function (){
