@@ -1,5 +1,5 @@
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
-scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\src\\Schema\\Types\\Scalars\\DateTime")
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
@@ -51,3 +51,23 @@ type Query{
     listCategories: [Category]! @field(resolver: "App\\GraphQL\\Queries\\ListCategories@resolve")
 }
 
+type Product{
+
+    id: ID!
+    name: String!
+    description: String!
+    price: Float!
+    category_id: ID!
+    image_url: String!
+    created_at: DateTime!
+}
+
+type Query{
+    products(
+        search: String
+        sort:String
+        category_id: ID
+        page: Int
+        count: Int
+    ): [Product]! @field(resolver: "App\\GraphQL\\Queries\\ListProducts@resolve")
+}
