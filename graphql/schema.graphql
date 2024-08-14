@@ -1,24 +1,6 @@
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
-"Indicates what fields are available at the top level of a query operation."
-type Query {
-    "Find a single user by an identifying attribute."
-    user(
-      "Search by primary key."
-      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
-
-      "Search by email address."
-      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
-    ): User @find
-
-    "List multiple users."
-    users(
-      "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
-      name: String @where(operator: "like")
-    ): [User!]! @paginate(defaultCount: 10)
-}
-
 "Account of a person who utilizes this application."
 type User {
     "Unique primary key."
@@ -37,8 +19,9 @@ type User {
     created_at: DateTime!
 
     "When the account was last updated."
-    updated_at: DateTime!
+    updated_at: DateTime
 }
+
 
 type Category{
     id: ID!
@@ -47,9 +30,6 @@ type Category{
     children: [Category]!
 }
 
-type Query{
-    listCategories: [Category]! @field(resolver: "App\\GraphQL\\Queries\\ListCategories@resolve")
-}
 
 type Product{
 
@@ -62,7 +42,30 @@ type Product{
     created_at: DateTime!
 }
 
+
+type UserResponse{
+    user: User
+    message: String
+    errors: [Error]!
+}
+
+type Error{
+    field: String
+    message: String
+}
+
+
+
+type VerifyEmailPayload{
+    success: Boolean!
+    message: String!
+}
+
+
+
 type Query{
+    listCategories: [Category]! @field(resolver: "App\\GraphQL\\Queries\\ListCategories@resolve")
+
     products(
         search: String
         sort:String
@@ -70,4 +73,23 @@ type Query{
         page: Int
         count: Int
     ): [Product]! @field(resolver: "App\\GraphQL\\Queries\\ListProducts@resolve")
+
 }
+
+
+
+
+type Mutation {
+    registerUser(
+        name: String!
+        email: String!
+        password: String!
+        password_confirmation: String!
+    ): UserResponse @field(resolver:"App\\GraphQL\\Mutations\\RegisterUser@resolve")
+
+    verifyEmail(
+        token: String!
+    ): VerifyEmailPayload  @field(resolver:"App\\GraphQL\\Mutations\\VerifyEmail@resolve")
+}
+
+
