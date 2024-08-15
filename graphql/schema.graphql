@@ -80,6 +80,26 @@ type VerifyEmailPayload{
 }
 
 
+type Address {
+    id: ID!
+    user_id: ID!
+    label: String!
+    name: String!
+    address_line1: String!
+    address_line2: String
+    city: String!
+    state: String!
+    postal_code: String!
+    country: String!
+    phone_number: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type LogoutResponse {
+    status: String!
+    user: User!
+}
 
 
 type Query{
@@ -116,6 +136,22 @@ type Mutation {
         product_id: ID!
         quantity: Int!
     ): UserResponse @field(resolver:"App\\GraphQL\\Mutations\\AddToCart@resolve")
+
+    addAddress(
+        label: String!
+        name: String!
+        address_line1: String!
+        address_line2: String
+        city: String!
+        state: String!
+        postal_code: String!
+        country: String!
+        phone_number: String!
+    ): Address @field(resolver:"App\\GraphQL\\Mutations\\AddAddress@resolve")
+
+
+    logout: LogoutResponse @field(resolver: "App\\GraphQL\\Mutations\\Logout")
+
 }
 
 
