@@ -1,3 +1,20 @@
+directive @field(
+    """
+    A reference to the resolver function to be used.
+    Consists of two parts: a class name and a method name, seperated by an `@` symbol.
+    If you pass only a class name, the method name defaults to `__invoke`.
+    """
+    resolver: String!
+) on FIELD_DEFINITION
+
+directive @scalar(
+    """
+    Reference to a class that extends `\GraphQL\Type\Definition\ScalarType`.
+    """
+    class: String!
+) on SCALAR
+
+
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
@@ -56,10 +73,12 @@ type Error{
 
 
 
+
 type VerifyEmailPayload{
     success: Boolean!
     message: String!
 }
+
 
 
 
@@ -80,6 +99,8 @@ type Query{
 
 
 type Mutation {
+    login(email: String!, password: String!): User! @field(resolver: "App\\GraphQL\\Mutations\\Login")
+
     registerUser(
         name: String!
         email: String!
@@ -90,6 +111,11 @@ type Mutation {
     verifyEmail(
         token: String!
     ): VerifyEmailPayload  @field(resolver:"App\\GraphQL\\Mutations\\VerifyEmail@resolve")
+
+    addToCart(
+        product_id: ID!
+        quantity: Int!
+    ): UserResponse @field(resolver:"App\\GraphQL\\Mutations\\AddToCart@resolve")
 }
 
 
