@@ -37,10 +37,8 @@ class RegisterUser
             'name' => $args['name'],
             'email' => $args['email'],
             'password' => Hash::make($args['password']),
-            'email_verification_token' => Str::random(60),
         ]);
 
-        $user->email_verification_token = Str::random(60);
         $user->save();
 
         $user->sendEmailVerificationNotification();
