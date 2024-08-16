@@ -81,25 +81,43 @@ type VerifyEmailPayload{
 
 
 type Address {
-    id: ID!
-    user_id: ID!
-    label: String!
-    name: String!
-    address_line1: String!
+    id: ID
+    user_id: ID
+    label: String
+    name: String
+    address_line1: String
     address_line2: String
-    city: String!
-    state: String!
-    postal_code: String!
-    country: String!
-    phone_number: String!
-    created_at: DateTime!
-    updated_at: DateTime!
+    city: String
+    state: String
+    postal_code: String
+    country: String
+    phone_number: String
+    created_at: DateTime
+    updated_at: DateTime
 }
 
 type LogoutResponse {
     status: String!
     user: User!
 }
+
+
+input CheckoutInput {
+    address_id: ID!
+    payment_method_id: ID!
+    cart_items: [CartItemInput!]!
+}
+
+input CartItemInput {
+    product_id: ID!
+    quantity: Int!
+}
+
+type OrderResponse {
+    order_id: ID
+    message: String
+}
+
 
 
 type Query{
@@ -152,6 +170,11 @@ type Mutation {
 
     logout: LogoutResponse @field(resolver: "App\\GraphQL\\Mutations\\Logout")
 
+    checkout(
+        input: CheckoutInput!
+    ): OrderResponse! @field(resolver:"App\\GraphQL\\Mutations\\Checkout@resolve")
+
+  
 }
 
 
