@@ -118,7 +118,42 @@ type OrderResponse {
     message: String
 }
 
+type OrderHistoryResult {
+    data: [Order]
+    pagination: PaginationInfo!
+}
 
+
+
+type Order {
+    id: ID!
+    status: String
+    total: Float
+    items: [OrderItem]
+    shipping_address: Address
+    payment_method: PaymentMethod
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type OrderItem {
+    product_id: ID
+    name: String
+    quantity: Int
+    price: Float
+    total: Float
+}
+
+type PaymentMethod {
+    type: String
+    last_four: String
+}
+
+type PaginationInfo {
+    currentPage: Int
+    totalPages: Int
+    totalItems: Int
+}
 
 type Query{
     listCategories: [Category]! @field(resolver: "App\\GraphQL\\Queries\\ListCategories@resolve")
@@ -130,6 +165,11 @@ type Query{
         page: Int
         count: Int
     ): [Product]! @field(resolver: "App\\GraphQL\\Queries\\ListProducts@resolve")
+
+    orderHistory(
+        page: Int,
+        status: String,
+        sort: String): OrderHistoryResult! @field(resolver:"App\\GraphQL\\Mutations\\OrderHistory@resolve")
 
 }
 
@@ -174,7 +214,7 @@ type Mutation {
         input: CheckoutInput!
     ): OrderResponse! @field(resolver:"App\\GraphQL\\Mutations\\Checkout@resolve")
 
-  
+
 }
 
 
