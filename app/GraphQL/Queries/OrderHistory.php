@@ -1,10 +1,9 @@
 <?php
 
-namespace App\GraphQL\Mutations;
+namespace App\GraphQL\Queries;
 
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
-use function Symfony\Component\String\b;
 
 class OrderHistory
 {

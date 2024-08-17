@@ -169,7 +169,7 @@ type Query{
     orderHistory(
         page: Int,
         status: String,
-        sort: String): OrderHistoryResult! @field(resolver:"App\\GraphQL\\Mutations\\OrderHistory@resolve")
+        sort: String): OrderHistoryResult! @field(resolver:"App\\GraphQL\\Queries\\OrderHistory@resolve")
 
 }
 
