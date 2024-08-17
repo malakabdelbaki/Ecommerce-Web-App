@@ -141,7 +141,7 @@ type OrderItem {
     name: String
     quantity: Int
     price: Float
-    total: Float
+    totalPrice: Float
 }
 
 type PaymentMethod {

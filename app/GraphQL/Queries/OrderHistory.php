@@ -54,8 +54,8 @@ class OrderHistory
                        'product_id' => $item->product_id,
                        'name' => $item->product->name, // Access the product relationship directly
                        'quantity' => $item->quantity,
-                       'price' => $item->price,
-                       'total' => $item->quantity * $item->price,
+                       'price' => $item->product->price,
+                       'totalPrice' => $item->totalPrice,
                    ];
                }),
                'shipping_address' => [

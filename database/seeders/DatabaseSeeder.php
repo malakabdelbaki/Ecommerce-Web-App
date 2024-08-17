@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PaymentMethodSeeder::class,
             AddressSeeder::class,
+            OrderSeeder::class,
+            OrderItemSeeder::class,
 
             // other seeders...
         ]);
