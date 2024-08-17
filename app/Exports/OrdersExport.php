@@ -27,24 +27,6 @@ class OrdersExport implements FromCollection, WithHeadings, WithMapping
 
     public function headings(): array
     {
-//        return [
-//            'Order ID', 'User ID', 'Status', 'Total', 'Items', 'Shipping Address',
-//            'City', 'Postal Code', 'Payment Method', 'Created At', 'Updated At'
-//        ];
-
-//        return [
-//            'Order ID',
-//            'User ID',
-//            'Status',
-//            'Total',
-//            'Items',
-//            'Shipping Address',
-//            'City',
-//            'Postal Code',
-//            'Payment Method',
-//            'Created At',
-//            'Updated At'
-//        ];
         return [
             'Order ID',
             'User ID',
@@ -60,7 +42,6 @@ class OrdersExport implements FromCollection, WithHeadings, WithMapping
 
     public function map($row): array
     {
-        // Format the items as a JSON array
         $items = $row->orderItems->map(function ($item) {
             return [
                 'Product ID' => $item->product_id,
@@ -71,7 +52,6 @@ class OrdersExport implements FromCollection, WithHeadings, WithMapping
             ];
         });
 
-        // Format the address as a JSON object
         $address = [
             "Recipient's Name" => $row->address->name,
             'Address Line 1' => $row->address->address_line1,
