@@ -26,7 +26,6 @@ class OrderItemFactory extends Factory
             'order_id' => Order::factory(),
             'product_id' => Product::factory(),
             'quantity' => $quantity,
-            'totalPrice' => $quantity * $this->faker->numberBetween(1, 10),
             'created_at' => now(),
             'updated_at' => now(),
         ];

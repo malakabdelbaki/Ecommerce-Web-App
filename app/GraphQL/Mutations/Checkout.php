@@ -69,7 +69,6 @@ class Checkout
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'quantity' => $item['quantity'],
-                    'totalPrice' => $product->price * $item['quantity'],
                 ]);
 
                 $total += $product->price * $item['quantity'];
