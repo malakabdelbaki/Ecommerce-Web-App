@@ -26,39 +26,13 @@ class CustomVerifyEmail extends Notification
         $this->user = $user;
     }
 
-
-
-//    protected function verificationUrl($notifiable)
-//    {
-//        return url('/api/verify-email?token=' . $notifiable->email_verification_token);
-//    }
-//    public function toMail($notifiable)
-//    {
-//
-//        return (new MailMessage)
-//            ->subject('Verify Your Email Address')
-//            ->line('Please click the button below to verify your email address.')
-//            ->action('Verify Email Address', $this->verificationUrl($notifiable))
-//            ->line('If you did not create an account, no further action is required.');
-//    }
-
     protected function verificationUrl()
     {
-        // Generate a unique token (you can use any token generation logic here)
         $token = bin2hex(random_bytes(32));
-
-        // Set the expiration timestamp (e.g., 60 minutes from now)
-        $expiresAt = Carbon::now()->addMinutes(180);
-        echo $expiresAt;
-
-        // Store the hashed token in the database (assuming you have an email_verification_token column)
-        $this->user->email_verification_token = $token;
-        $token = Hash::make($token);
-        $this->user->hashed_email_verification_token = $token;
+        $expiresAt = Carbon::now()->addMinutes(30);
+        $this->user->email_verification_token = hash('sha256',$token);
         $this->user->email_verification_token_expires_at = $expiresAt->toDateTimeString(); // Convert to MySQL datetime format
         $this->user->save();
-
-        // Create the custom verification URL with token and expiration timestamp as query parameters
         $url = config('app.url') . "/api/verify-email?token={$token}&expires_at={$expiresAt}";
 
         return $url;
