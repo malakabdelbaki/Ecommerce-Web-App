@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -32,8 +33,8 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Product created successfully',
-            'data' => $product
+            'message' => 'Product created successfully: '.$product,
+            'error' => []
         ]);
     }
 }

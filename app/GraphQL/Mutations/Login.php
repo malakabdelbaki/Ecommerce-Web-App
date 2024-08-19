@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\User;
+use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;

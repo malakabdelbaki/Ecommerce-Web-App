@@ -42,7 +42,6 @@ class RegisterUser
         $user->save();
 
         $user->sendEmailVerificationNotification();
-//        event(new Registered($user));
 
         return [
             'user' => $user,
