@@ -80,7 +80,7 @@ class Checkout
             // Commit transaction
             DB::commit();
 
-            Mail::to(Auth::user()->email)->send(new OrderConfirmation($order));
+            Mail::to(Auth::user()->email)->queue(new OrderConfirmation($order));
 
             return [
                 'order_id' => $order->id,
