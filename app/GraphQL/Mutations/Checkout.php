@@ -20,10 +20,6 @@ class Checkout
     {
         $user = Auth::user();
 
-        if(!$user){
-            throw new \Exception("User not found");
-        }
-
         if(!$user->hasVerifiedEmail()){
             throw new \Exception("Please verify your email first");
         }
@@ -31,10 +27,10 @@ class Checkout
         $input = $args['input'];
 
         $validator = Validator::make($input, [
-            'address_id' => 'required|exists:addresses,id',
-            'payment_method_id' => 'required|exists:payment_methods,id',
+            'address_id' => 'required|integer|exists:addresses,id',
+            'payment_method_id' => 'required|integer|exists:payment_methods,id',
             'cart_items' => 'required|array',
-            'cart_items.*.product_id' => 'required|exists:products,id',
+            'cart_items.*.product_id' => 'required|integer|exists:products,id',
             'cart_items.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -71,6 +67,7 @@ class Checkout
                     'quantity' => $item['quantity'],
                 ]);
 
+
                 $total += $product->price * $item['quantity'];
                 $product->decrement('stock', $item['quantity']);
 
@@ -82,6 +79,7 @@ class Checkout
 
             // Commit transaction
             DB::commit();
+
             Mail::to(Auth::user()->email)->send(new OrderConfirmation($order));
 
             return [

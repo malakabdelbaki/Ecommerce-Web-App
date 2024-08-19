@@ -14,6 +14,8 @@ class AddToCart
      */
     public function resolve($root, array $args)
     {
+        $user = Auth::user();
+
         $validator = Validator::make($args,[
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1'
@@ -23,11 +25,6 @@ class AddToCart
             throw new \Exception($validator->errors()->first());
         }
 
-        $user = Auth::user();
-
-        if(!$user){
-            throw new \Exception("User not found");
-        }
 
         $product = Product::find($args['product_id']);
 
@@ -45,15 +42,13 @@ class AddToCart
         if($existingCartItem){
             $newQuantity = $existingCartItem->pivot->quantity + $args['quantity'];
             $cart->products()->updateExistingPivot($product->id, ['quantity' => $newQuantity]);
-            $check = 'old';
         }else {
-            $cart->products()->attach($product->id, ['quantity' => $args['quantity']]);
-            $check = 'new';
+            $cart->products()->attach($product->id, ['quantity' => $args['quantity'], 'created_at' => \Carbon\Carbon::now()]);
         }
 
         return [
             'user' => $user,
-            'message' => 'Product added to cart successfully '.$check,
+            'message' => 'Product added to cart successfully ',
             'errors'=>[],
         ];
     }

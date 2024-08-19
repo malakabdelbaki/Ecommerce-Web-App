@@ -13,11 +13,14 @@ class OrderHistory
    public function resolve($root, $args){
 
        $user = Auth::user();
-       if(!$user){
-           throw new \Exception("User not found");
-       }
+
+
        if(!$user->hasVerifiedEmail()){
            throw new \Exception("Email not verified");
+       }
+
+       if($user->role!='user'){
+           throw new \Exception("Not allowed");
        }
 
        $query = Order::where('user_id', $user->id);
@@ -39,12 +42,11 @@ class OrderHistory
 
        $orders = $query
            ->with(['orderItems.product',  'paymentMethod', 'address'])
-           ->paginate(10, ['*'],  $args['page'] ?? 1);
+           ->paginate(3, ['*'], $args['page'] ?? 1);
 
 
-//       var_dump($orders);
 
-       $formattedOrders = $orders->map(function ($order) {
+       $formattedOrders = $orders->getCollection()->map(function ($order) {
            return [
                'id' => $order->id,
                'status' => $order->status,
@@ -76,6 +78,7 @@ class OrderHistory
                'updated_at' => $order->updated_at->toDateTimeString(),
            ];
        });
+
 
        return [
            'data' => $formattedOrders,
