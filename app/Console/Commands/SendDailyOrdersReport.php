@@ -47,7 +47,6 @@ class SendDailyOrdersReport extends Command
      */
     public function handle()
     {
-//        try {
             $orders = Order::with(['user', 'orderItems.product', 'paymentMethod', 'address'])
                 ->whereBetween('created_at', [Carbon::yesterday()->startOfDay(), Carbon::yesterday()->endOfDay()])
                 ->get();
@@ -55,23 +54,11 @@ class SendDailyOrdersReport extends Command
             $filePath = storage_path('app/daily_orders_report_' . Carbon::yesterday()->format('Y-m-d') . '.xlsx');
             Excel::store(new OrdersExport($orders), 'daily_orders_report_' . Carbon::yesterday()->format('Y-m-d') . '.xlsx');
 
-            // Send the email with the spreadsheet attached
-//            Mail::to(config('admin.email'))->queue(new DailyOrdersReport($filePath, $orders->count(), $orders->sum('total')));
-
-//            $this->info('Daily orders report email sent successfully!');
-            // Dispatch the email sending job
+      
             DailyOrdersJob::dispatch($filePath, $orders->count(), $orders->sum('total'));
 
             $this->info('Daily orders report email dispatched for sending!');
     }
-//        }
-//        catch (\Exception $e) {
-//            // Handle email sending failure
-//            Log::error('Failed to send daily orders report email: ' . $e->getMessage());
-//
-//            $this->error('Failed to send daily orders report email. '. $e->getMessage());
-//        }
-// }
 
 
 }
