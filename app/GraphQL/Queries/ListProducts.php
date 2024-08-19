@@ -21,7 +21,7 @@ class ListProducts
                                   ['%'.strtolower($args['search']).'%']);
         }
 
-        if(empty($args['sort'])){
+        if(!empty($args['sort'])){
             switch($args['sort']){
                 case 'price_asc':
                     $query->orderBy('price','asc');

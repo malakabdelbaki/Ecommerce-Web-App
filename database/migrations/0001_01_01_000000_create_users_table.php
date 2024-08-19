@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('role')->default('user');
             $table->rememberToken();
             $table->string('email_verification_token')->nullable();
-            $table->string('hashed_email_verification_token')->nullable();
             $table->timestamp('email_verification_token_expires_at')->nullable(); // Add this line
             $table->timestamps();
         });

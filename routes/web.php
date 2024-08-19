@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrdersController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SessionController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AuthMiddleware;
 use Illuminate\Support\Facades\Route;
