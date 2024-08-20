@@ -25,16 +25,10 @@ class VerifyEmail
        if (!$user) {
            return [
                'success' => false,
-               'message' => 'Invalid Token'
+               'message' => 'Invalid Token. A token can only be used once.'
            ];
        }
 
-       if(($user && $user->email_verified_at)){
-           return [
-               'success' => false,
-               'message' => 'Email already verified'
-           ];
-       }
 
        $user->email_verified_at = Carbon::now();
        $user->email_verification_token = null;
