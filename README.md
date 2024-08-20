@@ -21,7 +21,7 @@ php artisan db:seed
 php artisan queue:work --daemon
 ```
 
-### To send user story 12: Admin Daily Email with Orders Spreadsheet
+### To test user story 12: Admin Daily Email with Orders Spreadsheet
 Please configure a tool like mailtrap or debugmail
 run this command in terminal
 ```bash
