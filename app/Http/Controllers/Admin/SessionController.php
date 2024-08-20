@@ -16,8 +16,8 @@ class SessionController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:8'
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:8'
         ]);
 
         if ($validator->fails()) {
