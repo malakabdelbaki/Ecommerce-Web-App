@@ -4,6 +4,7 @@ namespace App\GraphQL\Queries;
 
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use MLL\GraphQLScalars\JSON;
 
 class OrderHistory
 {
@@ -42,7 +43,7 @@ class OrderHistory
 
        $orders = $query
            ->with(['orderItems.product',  'paymentMethod', 'address'])
-           ->paginate(3, ['*'], $args['page'] ?? 1);
+           ->paginate(3, ['*'], 'page',$args['page'] ?? 1);
 
 
 
@@ -72,7 +73,7 @@ class OrderHistory
                ],
                'payment_method' => [
                    'type' => $order->paymentMethod->type, // Access the payment method relationship directly
-                   'last_four' => $order->paymentMethod->last_four,
+                   'last_four' => $order->paymentMethod->digits,
                ],
                'created_at' => $order->created_at->toDateTimeString(),
                'updated_at' => $order->updated_at->toDateTimeString(),
