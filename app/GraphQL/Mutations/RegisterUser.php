@@ -27,11 +27,21 @@ class RegisterUser
         ]);
 
         if ($validator->fails()) {
-            return [
-                'errors' => collect($validator->errors()->all())->map(function ($error, $key) use ($validator) {
-                    return ['field' => array_keys($validator->failed())[$key], 'message' => $error];
-                }),
-            ];
+
+            $failed = $validator->failed();
+
+            $errors = collect($validator->errors()->all())->map(function ($error) use ($validator, $failed) {
+                // Find the first field that has this error message.
+                foreach ($failed as $field => $fail) {
+                    if (in_array($error, $validator->errors()->get($field))) {
+                        return ['field' => $field, 'message' => $error];
+                    }
+                }
+                // Fallback if no match is found (shouldn't happen, but just in case).
+                return ['field' => null, 'message' => $error];
+           });
+            return ['errors' => $errors];
+
         }
         $user = User::create([
             'name' => $args['name'],
