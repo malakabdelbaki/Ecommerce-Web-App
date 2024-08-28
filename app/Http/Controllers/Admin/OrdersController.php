@@ -22,13 +22,12 @@ class OrdersController extends Controller
 
 
         if($request->has('sort')){
-            switch($request['sort']){
-                case 'created_at_asc':
-                    $query->orderBy("created_at", "asc");
-                    break;
-                case 'created_at_desc':
-                    $query->orderBy("created_at", "desc");
-                    break;
+            $sortField = $request['sort']['field'];
+            $sortDirection = $request['sort']['direction'];
+
+            $validSortFields = ['created_at', 'total'];
+            if (in_array($sortField, $validSortFields)) {
+                $query->orderBy($sortField, $sortDirection);
             }
         }
 
