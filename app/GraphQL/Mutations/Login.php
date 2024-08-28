@@ -20,10 +20,6 @@ class Login
             throw new Error('User not found');
         }
 
-        if(!$user->hasVerifiedEmail()){
-            throw new \Error('User not verified');
-        }
-
         $guard = Auth::guard();
 
         if(!$guard->attempt($input)){

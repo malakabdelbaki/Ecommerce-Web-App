@@ -116,8 +116,8 @@ enum Direction {
 }
 
 input SortingCriteria {
-    field: String! 
-    direction: Direction! 
+    field: String!
+    direction: Direction!
 }
 
 input ListProductsInput {
@@ -146,8 +146,8 @@ input CartItemInput {
 }
 
 input LoginInput {
-    email: String! @rules(apply: ["email"]), 
-    password: String! 
+    email: String! @rules(apply: ["email"]),
+    password: String!
 }
 
 input RegisterUserInput {
@@ -191,7 +191,7 @@ type Query{
 
     orderHistory(
        input: OrderHistoryInput!
-       ): OrderHistoryResult! @guard @field(resolver:"App\\GraphQL\\Queries\\OrderHistory@resolve")
+       ): OrderHistoryResult! @guard @canModel(model: "App\\Models\\User", ability: "access") @field(resolver:"App\\GraphQL\\Queries\\OrderHistory@resolve")
 
 }
 
@@ -222,7 +222,7 @@ type Mutation {
 
     checkout(
         input: CheckoutInput!
-    ): OrderResponse! @guard @field(resolver:"App\\GraphQL\\Mutations\\Checkout@resolve")
+    ): OrderResponse! @guard @canModel(model: "App\\Models\\User", ability: "access") @field(resolver:"App\\GraphQL\\Mutations\\Checkout@resolve")
 
 
     resendVerificationEmail(

@@ -18,10 +18,6 @@ class OrderHistory
        $user = Auth::user();
 
 
-       if(!$user->hasVerifiedEmail()){
-           throw new \Exception("Email not verified");
-       }
-
        $input = $args['input'];
        $query = Order::where('user_id', $user->id);
 

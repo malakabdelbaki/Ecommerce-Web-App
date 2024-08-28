@@ -21,12 +21,7 @@ class Checkout
     {
         $user = Auth::user();
 
-        if(!$user->hasVerifiedEmail()){
-            throw new \Exception("Please verify your email first");
-        }
-
         $input = $args['input'];
-
 
         $cart = Cart::with('products')->findOrFail($input['cart_id']);
         $items = $cart->products;

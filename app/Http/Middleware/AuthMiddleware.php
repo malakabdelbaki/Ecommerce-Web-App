@@ -16,10 +16,9 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
+        if (Auth::check() && Auth::user()->hasVerifiedEmail()) {
             return $next($request);
         }
-
         return response()->json(['message' => 'Please log in or sign up'], 403);
     }
 }
