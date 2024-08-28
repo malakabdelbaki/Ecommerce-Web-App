@@ -213,6 +213,10 @@ type Mutation {
         input: AddToCartInput!
     ): UserResponse @guard  @field(resolver:"App\\GraphQL\\Mutations\\AddToCart@resolve")
 
+    removeFromCart(
+        input: AddToCartInput!
+    ): UserResponse @guard  @field(resolver:"App\\GraphQL\\Mutations\\RemoveFromCart@resolve")
+
     addAddress(
         input: AddAddressInput!
     ): Address @guard @field(resolver:"App\\GraphQL\\Mutations\\AddAddress@resolve")
