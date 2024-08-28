@@ -18,7 +18,8 @@ class ProductPostRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
             'stock' => 'required|integer|min:0',
             'image_url' => 'string|nullable|url'
         ];
@@ -41,7 +42,7 @@ class ProductPostRequest extends FormRequest
             'stock.min' => 'Stock must be greater than 0',
             'image_url.string' => 'Image URL must be a string',
             'image_url.url' => 'Image URL must be a valid URL'
-            
+
         ];
     }
 

@@ -20,7 +20,6 @@ class ProductFactory extends Factory
             'name' => $this->faker->word,
             'description' => $this->faker->sentence,
             'price' => $this->faker->randomFloat(2, 10, 100),
-            'category_id' => 1, // Assuming there's a category with ID 1
             'stock' => $this->faker->numberBetween(1, 100),
             'image_url' => $this->faker->imageUrl(),
         ];

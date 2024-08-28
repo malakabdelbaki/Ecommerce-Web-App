@@ -12,7 +12,13 @@ class ProductController extends Controller
 {
     public function store(ProductPostRequest $request)
     {
-        $product = Product::create($request->validated());
+        $validated = $request->validated();
+
+        $product = Product::create($validated);
+
+        if (!empty($validated['category_ids'])) {
+            $product->categories()->attach($validated['category_ids']);
+        }
 
         return response()->json([
             'status' => true,

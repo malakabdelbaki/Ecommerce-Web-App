@@ -14,8 +14,10 @@ class ListProducts
         $input = $args['input'];
         $query= Product::query();
 
-        if(!empty($input['category_id'])){
-            $query->where('category_id',$input['category_id']);
+        if (!empty($input['category_id'])) {
+            $query->whereHas('categories', function ($query) use ($input) {
+                $query->where('categories.id', $input['category_id']); // Specify table name for 'id'
+            });
         }
 
         if(!empty($input['search'])){
@@ -27,7 +29,7 @@ class ListProducts
             $sortField = $input['sort']['field'];
             $sortDirection = $input['sort']['direction'];
 
-            $validSortFields = ['price', 'created_at']; 
+            $validSortFields = ['price', 'created_at'];
             if (in_array($sortField, $validSortFields)) {
                 $query->orderBy($sortField, $sortDirection);
             }

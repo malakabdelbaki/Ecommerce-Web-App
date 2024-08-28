@@ -23,7 +23,7 @@ type Product{
     name: String!
     description: String!
     price: Float!
-    category_id: ID!
+    category_id: [ID]
     image_url: String
     created_at: DateTime!
 }
@@ -123,7 +123,7 @@ input SortingCriteria {
 input ListProductsInput {
     search: String
     sort:SortingCriteria
-    category_id: ID
+    category_id: [ID]
     page: Int
     count: Int
 }
