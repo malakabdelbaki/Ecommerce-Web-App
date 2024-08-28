@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Cart;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,35 +16,29 @@ class AddToCart
     public function resolve($root, array $args)
     {
         $user = Auth::user();
+        $input = $args['input'];
 
-        $validator = Validator::make($args,[
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
-        ]);
+        $productId = $input['product_id'];
 
-        if ($validator->fails()) {
-            throw new \Exception($validator->errors()->first());
-        }
+        $quantityToAdd = $input['quantity'];
 
+        $product = Product::select('id', 'stock')->findOrFail($productId);
 
-        $product = Product::find($args['product_id']);
-
-
-        if($args['quantity']>$product->stock){
-            throw new \Exception("Only $product->stock items are available");
+        if ($quantityToAdd > $product->stock) {
+            throw new \Exception("InsufficientStockException: Only $product->stock items are available");
         }
 
         $cart = Cart::firstOrCreate([
             'user_id' => $user->id
         ]);
 
-        $existingCartItem  = $cart->products()->where('product_id', $args['product_id'])->first();
+        $existingCartItem  = $cart->products()->where('product_id', $productId)->first();
 
         if($existingCartItem){
-            $newQuantity = $existingCartItem->pivot->quantity + $args['quantity'];
-            $cart->products()->updateExistingPivot($product->id, ['quantity' => $newQuantity]);
+            $newQuantity = $existingCartItem->pivot->quantity + $quantityToAdd;
+            $cart->products()->updateExistingPivot($productId, ['quantity' => $newQuantity, 'updated_at' => Carbon::now()]);
         }else {
-            $cart->products()->attach($product->id, ['quantity' => $args['quantity'], 'created_at' => \Carbon\Carbon::now()]);
+            $cart->products()->attach($productId, ['quantity' => $quantityToAdd, 'created_at' => \Carbon\Carbon::now()]);
         }
 
         return [

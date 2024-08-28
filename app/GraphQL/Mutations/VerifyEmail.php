@@ -18,7 +18,8 @@ class VerifyEmail
      */
    public function resolve($rootValue, array $args){
 
-       $user = User::where('email_verification_token', hash('sha256',$args['token']))
+       $input = $args['input'];
+       $user = User::where('email_verification_token', hash('sha256',$input['token']))
            ->where('email_verification_token_expires_at', '>', Carbon::now()->toDateTimeString())
            ->first();
 

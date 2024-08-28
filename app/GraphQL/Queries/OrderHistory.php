@@ -20,30 +20,26 @@ class OrderHistory
            throw new \Exception("Email not verified");
        }
 
-       if($user->role!='user'){
-           throw new \Exception("Not allowed");
-       }
-
+       $input = $args['input'];
        $query = Order::where('user_id', $user->id);
 
-       if(isset($args['status'])){
-           $query->where("status", $args['status']);
+       if(isset($input['status'])){
+           $query->where("status", $input['status']);
        }
 
-       if(isset($args['sort'])){
-           switch($args['sort']){
-               case 'created_at_asc':
-                   $query->orderBy("created_at", "asc");
-                   break;
-               case 'created_at_desc':
-                   $query->orderBy("created_at", "desc");
-                   break;
-           }
+       if(isset($input['sort'])){
+            $sortField = $input['sort']['field'];
+            $sortDirection = $input['sort']['direction'];
+
+            $validSortFields = ['created_at', 'total'];
+            if (in_array($sortField, $validSortFields)) {
+                $query->orderBy($sortField, $sortDirection);
+            }
        }
 
        $orders = $query
            ->with(['orderItems.product',  'paymentMethod', 'address'])
-           ->paginate(3, ['*'], 'page',$args['page'] ?? 1);
+           ->paginate($input['count']??5, ['*'], 'page',$input['page'] ?? 1);
 
 
 

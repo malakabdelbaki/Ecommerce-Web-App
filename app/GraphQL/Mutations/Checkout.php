@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Mail\OrderConfirmation;
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -26,22 +27,18 @@ class Checkout
 
         $input = $args['input'];
 
-        $validator = Validator::make($input, [
-            'address_id' => 'required|integer|exists:addresses,id',
-            'payment_method_id' => 'required|integer|exists:payment_methods,id',
-            'cart_items' => 'required|array',
-            'cart_items.*.product_id' => 'required|integer|exists:products,id',
-            'cart_items.*.quantity' => 'required|integer|min:1',
-        ]);
 
-        if($validator->fails()){
-            throw new \Exception($validator->errors()->first());
-        }
-
-        $items = $input['cart_items'];
+        $cart = Cart::with('products')->findOrFail($input['cart_id']);
+        $items = $cart->products;
         DB::beginTransaction();
 
         try{
+            foreach ($items as $item) {
+                if ($item->stock < $item->pivot->quantity) {
+                    throw new \Exception('Insufficient stock for product: ' . $item->name);
+                }
+            }
+
             $order = Order::create([
                 'user_id' => $user->id,
                 'address_id' => $input['address_id'],
@@ -52,32 +49,25 @@ class Checkout
 
 
             $total = 0;
+            $orderItems = [];
             foreach ($items as $item) {
-                $product = Product::find($item['product_id']);
-                if($product->stock < $item['quantity']){
-                    return [
-                        'order_id' => $order->id,
-                        'message' => 'Insufficient stock for product: ' . $product->name,
-                    ];
-                }
-
-                OrderItem::create([
+                $quantity = $item->pivot->quantity;
+                $orderItems[] = [
                     'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'quantity' => $item['quantity'],
-                ]);
+                    'product_id' => $item->id,
+                    'quantity' => $quantity,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
 
-
-                $total += $product->price * $item['quantity'];
-                $product->decrement('stock', $item['quantity']);
-
-
+                $total += $item->price * $quantity;
+                $item->decrement('stock', $quantity);
             }
 
-            // Update order total
+            OrderItem::insert($orderItems);
+
             $order->update(['total' => $total]);
 
-            // Commit transaction
             DB::commit();
 
             Mail::to(Auth::user()->email)->queue(new OrderConfirmation($order));

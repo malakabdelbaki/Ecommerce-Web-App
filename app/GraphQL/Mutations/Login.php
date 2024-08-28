@@ -11,22 +11,11 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class Login
 {
-    public function __invoke($_, array $args, GraphQLContext $context){
+    public function resolve($root, array $args){
 
-        $validator =  Validator::make($args, [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $input = $args['input'];
+        $user = User::where('email', $input['email'])->first();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Some errors occurred',
-                'errors' => $validator->errors()
-            ]);
-        }
-
-        $user = User::where('email', $args['email'])->first();
         if(!$user){
             throw new Error('User not found');
         }
@@ -37,7 +26,7 @@ class Login
 
         $guard = Auth::guard();
 
-        if(!$guard->attempt($args)){
+        if(!$guard->attempt($input)){
             throw new \Error('Invalid credentials');
         }
 

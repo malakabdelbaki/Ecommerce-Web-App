@@ -3,25 +3,13 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 
 "Account of a person who utilizes this application."
 type User {
-    "Unique primary key."
     id: ID!
-
-    "Non-unique name."
     name: String!
-
-    "Unique email address."
     email: String!
-
-    "When the email was verified."
     email_verified_at: DateTime
-
-    "When the account was created."
     created_at: DateTime!
-
-    "When the account was last updated."
     updated_at: DateTime
 }
-
 
 type Category{
     id: ID!
@@ -30,9 +18,7 @@ type Category{
     children: [Category]!
 }
 
-
 type Product{
-
     id: ID!
     name: String!
     description: String!
@@ -41,7 +27,6 @@ type Product{
     image_url: String
     created_at: DateTime!
 }
-
 
 type UserResponse{
     user: User
@@ -54,14 +39,10 @@ type Error{
     message: String
 }
 
-
-
-
 type VerifyEmailPayload{
     success: Boolean!
     message: String!
 }
-
 
 type Address {
     id: ID
@@ -84,18 +65,6 @@ type LogoutResponse {
     user: User!
 }
 
-
-input CheckoutInput {
-    address_id: ID!
-    payment_method_id: ID!
-    cart_items: [CartItemInput!]!
-}
-
-input CartItemInput {
-    product_id: ID!
-    quantity: Int!
-}
-
 type OrderResponse {
     order_id: ID
     message: String
@@ -105,8 +74,6 @@ type OrderHistoryResult {
     data: [Order]
     pagination: PaginationInfo!
 }
-
-
 
 type Order {
     id: ID!
@@ -143,67 +110,124 @@ type Response {
     message: String!
 }
 
+enum Direction {
+    ASC
+    DESC
+}
+
+input SortingCriteria {
+    field: String! 
+    direction: Direction! 
+}
+
+input ListProductsInput {
+    search: String
+    sort:SortingCriteria
+    category_id: ID
+    page: Int
+    count: Int
+}
+
+input OrderHistoryInput {
+    page: Int
+    status: String
+    sort: SortingCriteria
+}
+
+input CheckoutInput {
+    address_id: ID! @rules(apply: ["exists:addresses,id"])
+    payment_method_id: ID! @rules(apply: ["exists:payment_methods,id"])
+    cart_id: ID! @rules(apply: ["exists:carts,id"])
+}
+
+input CartItemInput {
+    product_id: ID!
+    quantity: Int!
+}
+
+input LoginInput {
+    email: String! @rules(apply: ["email"]), 
+    password: String! 
+}
+
+input RegisterUserInput {
+    name: String! @rules(apply: ["max:255", "min:1"]),
+    email: String! @rules(apply: ["email", "unique:users,email", "max:255"]),
+    password: String! @rules(apply: ["confirmed", "min:8", "regex:/[a-zA-Z]/", "regex:/\\d/", "regex:/[@$!%*?&_]/"])
+    password_confirmation: String!
+}
+
+input AddToCartInput {
+    product_id: ID! @rules(apply: ["exists:products,id"]),
+    quantity: Float! @rules(apply: ["min:0.1"])
+}
+
+input AddAddressInput {
+    label: String! @rules(apply: ["max:255"]),
+    name: String! @rules(apply: ["max:255"]),
+    address_line1: String! @rules(apply: ["max:255"]),
+    address_line2: String @rules(apply: ["max:255"]),
+    city: String! @rules(apply: ["max:255"]),
+    state: String! @rules(apply: ["max:255"]),
+    postal_code: String! @rules(apply: ["max:255"]),
+    country: String! @rules(apply: ["max:255"]),
+    phone_number: String! @rules(apply: ["regex:/(0)[0-9]/", "not_regex:/[a-z]/", "min:9"])
+}
+
+input resendVerificationEmailInput {
+    email: String! @rules(apply: ["email"])
+}
+
+input verifyEmailInput {
+    token: String! @rules(apply: ["required"])
+}
+
 type Query{
     listCategories: [Category]! @field(resolver: "App\\GraphQL\\Queries\\ListCategories@resolve")
 
     products(
-        search: String
-        sort:String
-        category_id: ID
-        page: Int
-        count: Int
+        input: ListProductsInput!
     ): [Product]! @field(resolver: "App\\GraphQL\\Queries\\ListProducts@resolve")
 
     orderHistory(
-        page: Int,
-        status: String,
-        sort: String): OrderHistoryResult! @guard @field(resolver:"App\\GraphQL\\Queries\\OrderHistory@resolve")
+       input: OrderHistoryInput!
+       ): OrderHistoryResult! @guard @field(resolver:"App\\GraphQL\\Queries\\OrderHistory@resolve")
 
 }
 
-
-
-
 type Mutation {
-    login(email: String!, password: String!): User! @field(resolver: "App\\GraphQL\\Mutations\\Login")
+    login(
+      input: LoginInput!
+    ): User!
+    @field(resolver: "App\\GraphQL\\Mutations\\Login@resolve")
 
     registerUser(
-        name: String!
-        email: String!
-        password: String!
-        password_confirmation: String!
+        input: RegisterUserInput!
     ): UserResponse @field(resolver:"App\\GraphQL\\Mutations\\RegisterUser@resolve")
 
     verifyEmail(
-        token: String!
+        input: verifyEmailInput!
     ): VerifyEmailPayload  @field(resolver:"App\\GraphQL\\Mutations\\VerifyEmail@resolve")
 
     addToCart(
-        product_id: ID!
-        quantity: Int!
+        input: AddToCartInput!
     ): UserResponse @guard  @field(resolver:"App\\GraphQL\\Mutations\\AddToCart@resolve")
 
     addAddress(
-        label: String!
-        name: String!
-        address_line1: String!
-        address_line2: String
-        city: String!
-        state: String!
-        postal_code: String!
-        country: String!
-        phone_number: String!
+        input: AddAddressInput!
     ): Address @guard @field(resolver:"App\\GraphQL\\Mutations\\AddAddress@resolve")
 
 
-    logout: LogoutResponse @guard  @field(resolver: "App\\GraphQL\\Mutations\\Logout")
+    logout: LogoutResponse @guard  @field(resolver: "App\\GraphQL\\Mutations\\Logout@resolve")
 
     checkout(
         input: CheckoutInput!
     ): OrderResponse! @guard @field(resolver:"App\\GraphQL\\Mutations\\Checkout@resolve")
 
 
-    resendVerificationEmail(email: String!): Response  @field(resolver:"App\\GraphQL\\Mutations\\resendVerificationEmail@resolve")
+    resendVerificationEmail(
+        input: resendVerificationEmailInput!
+        ): Response  @field(resolver:"App\\GraphQL\\Mutations\\resendVerificationEmail@resolve")
 }
 
 

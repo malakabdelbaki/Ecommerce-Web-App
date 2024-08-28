@@ -20,33 +20,11 @@ class RegisterUser
      */
     public function resolve($root, array $args)
     {
-        $validator = Validator::make($args, [
-            'name' => ['required', 'string', ' max:255'],
-            'email' => ['required', 'email', 'unique:users', 'string', 'max:255'],
-            'password' => ['required', 'string', 'confirmed', Password::min(8)->letters()->numbers()->symbols()],
-        ]);
-
-        if ($validator->fails()) {
-
-            $failed = $validator->failed();
-
-            $errors = collect($validator->errors()->all())->map(function ($error) use ($validator, $failed) {
-                // Find the first field that has this error message.
-                foreach ($failed as $field => $fail) {
-                    if (in_array($error, $validator->errors()->get($field))) {
-                        return ['field' => $field, 'message' => $error];
-                    }
-                }
-                // Fallback if no match is found (shouldn't happen, but just in case).
-                return ['field' => null, 'message' => $error];
-           });
-            return ['errors' => $errors];
-
-        }
+        $input = $args["input"];
         $user = User::create([
-            'name' => $args['name'],
-            'email' => $args['email'],
-            'password' => Hash::make($args['password']),
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'password' => Hash::make($input['password']),
         ]);
 
         $user->save();

@@ -9,7 +9,7 @@ class ListCategories
     /**
      * Create a new class instance.
      */
-    public function resolve($root, array $args)
+    public function resolve()
     {
         try {
             return Category::whereNull('parent_id')->with('children')->get();

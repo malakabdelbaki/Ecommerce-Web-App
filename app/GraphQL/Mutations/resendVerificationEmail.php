@@ -8,8 +8,8 @@ class resendVerificationEmail
 {
     public function resolve($rootValue, array $args)
     {
-        // Find the user by email
-        $user = User::where('email', $args['email'])->first();
+        $input = $args['input'];
+        $user = User::where('email', $input['email'])->first();
 
         if (!$user) {
             return [

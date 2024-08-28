@@ -9,38 +9,30 @@ class ListProducts
     /**
      * Create a new class instance.
      */
-    public function resolve($root, array $args){
+    public function resolve($root, array $args)
+    {
+        $input = $args['input'];
         $query= Product::query();
 
-        if(!empty($args['category_id'])){
-            $query->where('category_id',$args['category_id']);
+        if(!empty($input['category_id'])){
+            $query->where('category_id',$input['category_id']);
         }
 
-        if(!empty($args['search'])){
-            $query->whereRaw('LOWER(name) LIKE ?',
-                                  ['%'.strtolower($args['search']).'%']);
+        if(!empty($input['search'])){
+            $query->whereRaw('name LIKE ?',
+                                  ['%'.$input['search'].'%']);
         }
 
-        if(!empty($args['sort'])){
-            switch($args['sort']){
-                case 'price_asc':
-                    $query->orderBy('price','asc');
-                    break;
-                case 'price_desc':
-                    $query->orderBy('price','desc');
-                    break;
-                case 'created_at_asc':
-                    $query->orderBy('created_at','asc');
-                    break;
-                case 'created_at_desc':
-                    $query->orderBy('created_at','desc');
-                    break;
+        if(!empty($input['sort'])){
+            $sortField = $input['sort']['field'];
+            $sortDirection = $input['sort']['direction'];
 
+            $validSortFields = ['price', 'created_at']; 
+            if (in_array($sortField, $validSortFields)) {
+                $query->orderBy($sortField, $sortDirection);
             }
         }
 
-        $count = $args['count']??10;
-
-        return $query->paginate($count,['*'],'page',$args['page'] ?? 1);
+        return $query->paginate($input['count']??10 ,['*'],'page',$input['page'] ?? 1);
     }
 }
