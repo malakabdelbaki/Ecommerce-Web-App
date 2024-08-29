@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AddAddress
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve($root, $args)
     {
         $user = Auth::user();

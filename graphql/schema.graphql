@@ -75,6 +75,11 @@ type OrderHistoryResult {
     pagination: PaginationInfo!
 }
 
+type PaymentMethod{
+    name: String!
+    digits: String
+}
+
 type Order {
     id: ID!
     status: String
@@ -92,11 +97,6 @@ type OrderItem {
     quantity: Int
     price: Float
     totalPrice: Float
-}
-
-type PaymentMethod {
-    type: String
-    last_four: String
 }
 
 type PaginationInfo {
@@ -179,7 +179,12 @@ input resendVerificationEmailInput {
 }
 
 input verifyEmailInput {
-    token: String! @rules(apply: ["required"])
+    token: String!
+}
+
+input addPaymentMethodInput{
+    paymentMethod_id: ID! @rules(apply: ["exists:payment_methods,id"])
+    digits: String
 }
 
 type Query{
@@ -193,6 +198,7 @@ type Query{
        input: OrderHistoryInput!
        ): OrderHistoryResult! @guard @canModel(model: "App\\Models\\User", ability: "access") @field(resolver:"App\\GraphQL\\Queries\\OrderHistory@resolve")
 
+    listPaymentMethods: [PaymentMethod]! @field(resolver: "App\\GraphQL\\Queries\\ListPaymentMethods@resolve")
 }
 
 type Mutation {
@@ -232,6 +238,11 @@ type Mutation {
     resendVerificationEmail(
         input: resendVerificationEmailInput!
         ): Response  @field(resolver:"App\\GraphQL\\Mutations\\resendVerificationEmail@resolve")
+
+    addPaymentMethod(
+        input:addPaymentMethodInput!
+    ):Response  @guard @field(resolver:"App\\GraphQL\\Mutations\\AddPaymentMethod@resolve")
+
 }
 
 

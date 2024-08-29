@@ -25,9 +25,7 @@ class paymentMethodFactory extends Factory
         $paymentTypes = ['credit_card', 'paypal', 'bank_transfer'];
 
         return [
-            'user_id'=>  $this->faker->numberBetween(1, User::all()->count()),
-            'type' => $this->faker->randomElement($paymentTypes),
-            'digits' => $this->faker->creditCardNumber, // Last 4 digits of card number for credit cards
+            'name' => $this->faker->randomElement($paymentTypes),
         ];
     }
 }

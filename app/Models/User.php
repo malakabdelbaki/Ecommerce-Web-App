@@ -57,4 +57,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Address::class);
     }
+
+    public function paymentMethods()
+    {
+        return $this->belongsToMany(PaymentMethod::class, 'user_payment_methods')
+            ->withPivot('digits')
+            ->withTimestamps();    }
+
 }

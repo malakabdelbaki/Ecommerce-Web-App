@@ -6,9 +6,6 @@ use App\Models\Category;
 
 class ListCategories
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve()
     {
         try {
