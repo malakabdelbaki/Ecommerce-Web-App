@@ -13,7 +13,6 @@ class ProductController extends Controller
     public function store(ProductPostRequest $request)
     {
         $validated = $request->validated();
-
         $product = Product::create($validated);
 
         if (!empty($validated['category_ids'])) {

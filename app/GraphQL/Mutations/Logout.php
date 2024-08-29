@@ -6,19 +6,14 @@ use Illuminate\Support\Facades\Auth;
 
 class Logout
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve($root, array $args)
     {
-        // Get the authenticated user
         $user = Auth::user();
 
         if (!$user) {
             throw new \Exception("No user is authenticated.");
         }
-
-        // Revoke or invalidate the user's token or session (depends on your setup)
+        
         $guard = Auth::guard('web');
         $guard->logout();
 

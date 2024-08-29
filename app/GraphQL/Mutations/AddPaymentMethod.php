@@ -10,7 +10,6 @@ class AddPaymentMethod
     {
         $user = Auth::user();
         $paymentMethodData = $args['input'];
-
         $user->paymentMethods()->attach($paymentMethodData['paymentMethod_id'], [
             'digits' => $paymentMethodData['digits']
         ]);

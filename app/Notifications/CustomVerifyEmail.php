@@ -18,9 +18,6 @@ class CustomVerifyEmail extends Notification
     use Queueable;
     protected User $user;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct($user)
     {
         $this->user = $user;
@@ -38,14 +35,8 @@ class CustomVerifyEmail extends Notification
         return $url;
     }
 
-    /**
-     * Build the mails representation of the notification.
-     *
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
     public function toMail(): MailMessage
     {
-
        $url = $this->verificationUrl();
        return (new MailMessage)
            ->markdown('vendor.notifications.email')

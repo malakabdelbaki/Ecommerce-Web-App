@@ -15,9 +15,6 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterUser
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve($root, array $args)
     {
         $input = $args["input"];
@@ -28,7 +25,6 @@ class RegisterUser
         ]);
 
         $user->save();
-
         $user->sendEmailVerificationNotification();
 
         return [

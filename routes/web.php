@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Session;
 Route::post('/admin/login', [SessionController::class, 'login']);
 Route::post('/admin/logout', [SessionController::class, 'logout'])->middleware(AuthMiddleware::class, AdminMiddleware::class);
 
-
 Route::post('/admin/categories', [CategoryController::class, 'store'])->middleware([AuthMiddleware::class, AdminMiddleware::class]);
 Route::post('/admin/products', [ProductController::class, 'store'])->middleware([AuthMiddleware::class, AdminMiddleware::class]);
 

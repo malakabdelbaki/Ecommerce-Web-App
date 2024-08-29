@@ -26,7 +26,6 @@ class Login
             throw new \Error('Invalid credentials');
         }
 
-
         return $user;
     }
 

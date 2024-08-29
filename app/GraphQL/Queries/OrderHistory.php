@@ -10,14 +10,9 @@ use App\Helpers\OrderFormatter;
 
 class OrderHistory
 {
-    /**
-     * Create a new class instance.
-     */
    public function resolve($root, $args){
 
        $user = Auth::user();
-
-
        $input = $args['input'];
        $query = Order::where('user_id', $user->id);
 

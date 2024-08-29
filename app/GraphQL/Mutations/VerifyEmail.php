@@ -13,9 +13,6 @@ use Nuwave\Lighthouse\Exceptions\AuthorizationException;
 
 class VerifyEmail
 {
-    /**
-     * Create a new class instance.
-     */
    public function resolve($rootValue, array $args){
 
        $input = $args['input'];

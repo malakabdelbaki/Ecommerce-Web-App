@@ -21,7 +21,6 @@ class OrdersController extends Controller
             $query->where('id', $request->input('order_id'));
         }
 
-
         if($request->has('sort')){
             $sortField = $request['sort']['field'];
             $sortDirection = $request['sort']['direction'];

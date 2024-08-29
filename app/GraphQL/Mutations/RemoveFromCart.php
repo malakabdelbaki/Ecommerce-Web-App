@@ -15,7 +15,6 @@ class RemoveFromCart
     {
         $user = Auth::user();
         $input = $args['input'];
-
         $productId = $input['product_id'];
         $quantityToRemove = $input['quantity'];
         $product = Product::find($productId);
@@ -24,11 +23,9 @@ class RemoveFromCart
             throw new \Exception("ProductNotFoundException: Product with ID $productId does not exist");
         }
 
-        // Find or create the cart
         $cart = Cart::firstOrCreate([
             'user_id' => $user->id
         ]);
-
         $cartItem = $cart->products()->where('product_id', $productId)->first();
 
         if (!$cartItem) {
@@ -37,10 +34,13 @@ class RemoveFromCart
 
         $currentQuantity = $cartItem->pivot->quantity;
 
-        if ($quantityToRemove >= $currentQuantity) {
+        if ($quantityToRemove >= $currentQuantity) 
+        {
             $cart->products()->detach($productId);
             $message = 'Product removed from cart successfully';
-        } else {
+        } 
+        else 
+        {
             $newQuantity = $currentQuantity - $quantityToRemove;
             $cart->products()->updateExistingPivot($productId, ['quantity' => $newQuantity, 'updated_at' => Carbon::now()]);
             $message = 'Product quantity updated successfully';

@@ -12,19 +12,13 @@ use Illuminate\Support\Facades\Mail;
 
 class Checkout
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve($root, $args)
     {
         $user = Auth::user();
-
         $input = $args['input'];
-
         $cart = Cart::with('products')->findOrFail($input['cart_id']);
         $items = $cart->products;
         DB::beginTransaction();
-
         try{
             foreach ($items as $item) {
                 if ($item->stock < $item->pivot->quantity) {
@@ -39,7 +33,6 @@ class Checkout
                 'total' => 0,
                 'status' => 'Pending',
             ]);
-
 
             $total = 0;
             $orderItems = [];
@@ -58,11 +51,8 @@ class Checkout
             }
 
             OrderItem::insert($orderItems);
-
             $order->update(['total' => $total]);
-
             DB::commit();
-
             Mail::to(Auth::user()->email)->queue(new OrderConfirmation($order));
 
             return [

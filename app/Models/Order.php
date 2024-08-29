@@ -12,11 +12,13 @@ class Order extends Model
         'user_id', 'address_id', 'payment_method_id', 'status', 'total',
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function address(){
+    public function address()
+    {
         return $this->belongsTo(Address::class);
     }
 
@@ -26,7 +28,8 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function paymentMethod(){
+    public function paymentMethod()
+    {
         return $this->belongsTo(PaymentMethod::class);
     }
 }

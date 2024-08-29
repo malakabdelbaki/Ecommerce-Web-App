@@ -19,12 +19,9 @@ class DailyOrdersJob implements ShouldQueue
     protected $ordersCount;
     protected $total;
 
-    public $tries = 3; // Maximum number of attempts
-    public $backoff = [60, 120, 300]; // Retry intervals in seconds (1 min, 2 min, 5 min)
+    public $tries = 3;
+    public $backoff = [60, 120, 300];
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct($filePath, $ordersCount, $total)
     {
         $this->filePath = $filePath;
@@ -32,17 +29,12 @@ class DailyOrdersJob implements ShouldQueue
         $this->total = $total;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         try {
             Mail::to(config('admin.email'))->send(new DailyOrdersReport($this->filePath, $this->ordersCount, $this->total));
         } catch (\Exception $e) {
             Log::error('Failed to send daily orders report email: ' . $e->getMessage());
-
-            // Re-throw the exception to trigger the retry mechanism
             throw $e;
         }
     }

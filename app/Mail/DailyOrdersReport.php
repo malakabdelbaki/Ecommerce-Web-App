@@ -17,9 +17,6 @@ class DailyOrdersReport extends Mailable
     public $orderCount;
     public $totalSales;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct($filePath, $orderCount, $totalSales)
     {
         $this->filePath = $filePath;

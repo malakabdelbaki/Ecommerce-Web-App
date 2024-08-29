@@ -6,9 +6,6 @@ use App\Models\Product;
 
 class ListProducts
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve($root, array $args)
     {
         $input = $args['input'];

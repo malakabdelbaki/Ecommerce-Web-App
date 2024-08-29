@@ -11,12 +11,12 @@ class PaymentMethodController extends Controller
 {
     public function store(PaymentMethodPostRequest $request)
     {
-        $PaymentMethod = PaymentMethod::create($request->validated());
+        $paymentMethod = PaymentMethod::create($request->validated());
 
         return response()->json([
             'status' => true,
             'message' => 'Payment Method created successfully',
-            'category' => $PaymentMethod
+            'category' => $paymentMethod
         ], 201);
     }
 }

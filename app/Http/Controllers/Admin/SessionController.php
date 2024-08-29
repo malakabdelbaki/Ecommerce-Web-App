@@ -16,15 +16,18 @@ class SessionController extends Controller
     {
         $data = $request->validated();
         $user = User::where('email', $data['email'])->first();
-        if ($user) {
-
-            if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+        if ($user)
+        {
+            if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']]))
+            {
                 return response()->json([
                     'status' => true,
                     'message' => 'Login Successful',
                     'errors' => []
                 ]);
-            } else {
+            }
+            else
+            {
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid password',

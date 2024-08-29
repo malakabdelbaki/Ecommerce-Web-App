@@ -10,18 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class AddToCart
 {
-    /**
-     * Create a new class instance.
-     */
     public function resolve($root, array $args)
     {
         $user = Auth::user();
         $input = $args['input'];
-
         $productId = $input['product_id'];
-
         $quantityToAdd = $input['quantity'];
-
         $product = Product::select('id', 'stock')->findOrFail($productId);
 
         if ($quantityToAdd > $product->stock) {
@@ -31,13 +25,15 @@ class AddToCart
         $cart = Cart::firstOrCreate([
             'user_id' => $user->id
         ]);
-
         $existingCartItem  = $cart->products()->where('product_id', $productId)->first();
 
-        if($existingCartItem){
+        if($existingCartItem)
+        {
             $newQuantity = $existingCartItem->pivot->quantity + $quantityToAdd;
             $cart->products()->updateExistingPivot($productId, ['quantity' => $newQuantity, 'updated_at' => Carbon::now()]);
-        }else {
+        }
+        else 
+        {
             $cart->products()->attach($productId, ['quantity' => $quantityToAdd, 'created_at' => \Carbon\Carbon::now()]);
         }
 
