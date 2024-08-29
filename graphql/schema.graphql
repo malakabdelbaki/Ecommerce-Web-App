@@ -15,7 +15,7 @@ type Category{
     id: ID!
     name: String!
     description: String
-    children: [Category]!
+    children: [Category]
 }
 
 type Product{
