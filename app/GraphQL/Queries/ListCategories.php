@@ -9,7 +9,7 @@ class ListCategories
 {
     public function resolve()
     {
-//        try {
+       try {
         $categories = DB::select("
                 WITH RECURSIVE category_path AS (
                     SELECT
@@ -43,13 +43,12 @@ class ListCategories
                     category_path
             ");
 
-        // Convert raw results to Category models
         $categoryModels = Category::hydrate($categories);
 
         return $categoryModels;
-//        }
-//        catch (\Exception $e) {
-//            throw new \GraphQL\Error\Error('Failed to load categories: ', $e->getMessage());
-//        }
+       }
+       catch (\Exception $e) {
+           throw new \GraphQL\Error\Error('Failed to load categories: ', $e->getMessage());
+       }
     }
 }
