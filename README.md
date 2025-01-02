@@ -7,7 +7,7 @@
 ### Clone this repo
 
 ```git
-git clone ggit@gitlab.com:malak.ismail/ecommerce-web-app.git
+git clone https://github.com/malakabdelbaki/Ecommerce-Web-App.git
 ```
 
 ### run migrations
