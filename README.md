@@ -5,7 +5,6 @@ A robust and scalable **Ecommerce Web Application** backend built with **Laravel
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-red)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2-blue)](https://www.php.net/)
 [![GraphQL](https://img.shields.io/badge/API-GraphQL-ff4081)](https://graphql.org/)
-[![License](https://img.shields.io/github/license/malakabdelbaki/Ecommerce-Web-App)](LICENSE)
 
 ---
 
