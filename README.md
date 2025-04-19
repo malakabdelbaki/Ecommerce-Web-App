@@ -37,6 +37,15 @@ A robust and scalable **Ecommerce Web Application** backend built with **Laravel
 | Token Handling| Laravel Cache, Custom Token Logic |
 
 ---
+### System Architecture
+![System Architecture](Docs/Diagrams/System%20Architecture%20Diagram.png)
+
+### ERD
+![ERD](Docs/Diagrams/ecomm-web-app.png)
+
+### GraphQL Schema
+![graphql schema](Docs/Diagrams/graphql-mutation-schema.png)
+![graphql schema](Docs/Diagrams/graphql-query-schema.png)
 
 
 ## How to run?
